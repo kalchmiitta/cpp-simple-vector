@@ -1,4 +1,10 @@
+// вставьте сюда ваш код для класса ArrayPtr
+// внесиnте в него изменения, 
+// которые позволят реализовать move-семантику
+
 #pragma once
+
+#include <utility>
 
 template <typename Type>
 class ArrayPtr {
@@ -23,6 +29,14 @@ public:
     
     // Запрещаем копирование
     ArrayPtr(const ArrayPtr&) = delete;
+    
+    ArrayPtr(ArrayPtr&& other) {
+        if (raw_ptr_ != nullptr) {
+            delete[] raw_ptr_;
+        }
+        raw_ptr_ = std::exchange(other.raw_ptr_, nullptr);
+    }
+    
     
     ~ArrayPtr() {
         delete[] raw_ptr_;
