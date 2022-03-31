@@ -1,3 +1,6 @@
+// вставьте сюда ваш код для класса SimpleVector
+// внесите необходимые изменения для поддержки move-семантики
+
 #pragma once
 
 #include <cassert>
@@ -91,11 +94,13 @@ public:
     
     // Возвращает ссылку на элемент с индексом index
     Type &operator[] (size_t index) noexcept {
+        assert(index < size_);
         return vector_[index];
     }
     
     // Возвращает константную ссылку на элемент с индексом index
     const Type &operator[] (size_t index) const noexcept {
+        assert(index < size_);
         return vector_[index];
     }
     
@@ -211,6 +216,7 @@ public:
     // Если перед вставкой значения вектор был заполнен полностью,
     // вместимость вектора должна увеличиться вдвое, а для вектора вместимостью 0 стать равной 1
     Iterator Insert (ConstIterator pos, const Type &value) {
+        assert(pos >= begin() && pos <= end());
         size_t num_pos = std::distance(cbegin(), pos);
         if (size_ < capacity_) {
             if (pos != end()) {
@@ -230,6 +236,7 @@ public:
     }
     
     Iterator Insert (ConstIterator pos, Type &&value) {
+        assert(pos >= begin() && pos <= end());
         size_t num_pos = std::distance(cbegin(), pos);
         if (size_ < capacity_) {
             if (pos != end()) {
@@ -256,7 +263,7 @@ public:
     
     // Удаляет элемент вектора в указанной позиции
     Iterator Erase (ConstIterator pos) {
-        assert(pos != end());
+        assert(pos >= begin() && pos <= end());
         Iterator res_it = &vector_[std::distance(cbegin(), pos)];
         std::move(res_it + 1, end(), res_it);
         -- size_;
